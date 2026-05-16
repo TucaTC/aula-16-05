@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loja Online - Catálogo</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+}
+
+/* GRID PRINCIPAL */
+.grid-container {
+    display: grid;
+    max-width: 1200px;
+    margin: 20px auto;
+    gap: 20px;
+
+    grid-template-areas:
+        "header header"
+        "sidebar products"
+        "footer footer";
+
+    grid-template-columns: 250px 1fr;
+}
+
+/* HEADER */
+.header {
+    grid-area: header;
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* SIDEBAR */
+.sidebar {
+    grid-area: sidebar;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* PRODUTOS */
+.products {
+    grid-area: products;
+
+    display: grid;
+    gap: 20px;
+
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* CARD */
+.product-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* IMAGEM AJUSTADA */
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.price {
+    font-weight: bold;
+    color: #27ae60;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    background: #3498db;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* FOOTER */
+.footer {
+    grid-area: footer;
+    background: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-areas:
+            "header"
+            "products"
+            "sidebar"
+            "footer";
+
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="grid-container">
+
+    <header class="header">
+        <div><strong>Minha Loja v.01</strong></div>
+        <div>🔍 Buscar | 🛒 Carrinho</div>
+    </header>
+
+    <aside class="sidebar">
+        <h3>Filtros</h3>
+        <p>Categoria</p>
+        <p>Preço</p>
+        <p>Marca</p>
+    </aside>
+
+    <main class="products" id="listaProdutos">
+
+
+    </main>
+
+    <footer class="footer">
+        © 2026 - Minha Loja
+    </footer>
+
+</div>
+<script>
+
+async function carregarProdutos() {
+
+    // 1. Buscar o arquivo JSON
+    const resposta = await fetch('produtos.json');
+
+    // 2. Converter para objeto JavaScript
+    const produtos = await resposta.json();
+
+    // 3. Selecionar onde vai mostrar
+    const container = document.getElementById('listaProdutos');
+
+    // 4. Percorrer os produtos
+    for (let i = 0; i < produtos.length; i++) {
+
+        const prod = produtos[i];
+
+        // 5. Criar HTML do produto
+        const card = `
+            <div class="product-card">
+                <img src="${prod.imagem}">
+                <h4>${prod.nome}</h4>
+                <div class="price">R$ ${prod.preco.toFixed(2)}</div>
+                <button>Comprar</button>
+            </div>
+        `;
+
+        // 6. Inserir na tela
+        container.innerHTML += card;
+    }
+}
+
+// 7. Executar função
+carregarProdutos();
+
+</script>
+
+</body>
+</html>
