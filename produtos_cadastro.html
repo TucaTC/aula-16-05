@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Adicione produtos</title>
+
+        <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:Arial, Helvetica, sans-serif;
+            background:#f4f4f4;
+            padding:40px;
+        }
+
+        .container{
+            max-width:600px;
+            margin:auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        .grupo{
+            margin-bottom:20px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            border:1px solid #ccc;
+            border-radius:5px;
+            font-size:16px;
+        }
+
+        input:focus{
+            outline:none;
+            border-color:#007bff;
+        }
+
+        button{
+            width:100%;
+            padding:15px;
+            background:#007bff;
+            color:white;
+            border:none;
+            border-radius:5px;
+            font-size:18px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#0056b3;
+        }
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+
+        <a href="index.html">Início</a><h1>Cadastro de Produtos 1.2</h1>
+
+        <form id="formProduto">
+
+            <!-- ID -->
+            <div class="grupo">
+
+                <label for="id">
+                    ID do Produto
+                </label>
+
+                <input type="number"
+                       id="id"
+                       name="id"
+                       required
+                       min="1">
+
+            </div>
+
+            <!-- NOME -->
+            <div class="grupo">
+
+                <label for="nome">
+                    Nome do Produto
+                </label>
+
+                <input type="text"
+                       id="nome"
+                       name="nome"
+                       required
+                       minlength="3"
+                       maxlength="100"
+                       placeholder="Digite o nome do produto">
+
+            </div>
+
+            <!-- PREÇO -->
+            <div class="grupo">
+
+                <label for="preco">
+                    Preço
+                </label>
+
+                <input type="number"
+                       id="preco"
+                       name="preco"
+                       required
+                       min="0"
+                       step="0.01"
+                       placeholder="0.00">
+
+            </div>
+
+            <!-- IMAGEM -->
+            <div class="grupo">
+
+                <label for="imagem">
+                    URL da Imagem
+                </label>
+
+                <input type="url"
+                       id="imagem"
+                       name="imagem"
+					   value ="https://picsum.photos/300/200?random=1"
+                       required
+                       placeholder="https://picsum.photos/300/200?random=1">
+
+            </div>
+
+            <!-- BOTÃO -->
+            <button type="submit">
+                Cadastrar Produto
+            </button>
+
+        </form>
+
+        </div>
+
+        <script>
+alert('produtos_cadastro.html');
+	
+document.getElementById("formProduto").addEventListener("submit", cadastrarProduto);
+
+
+async function cadastrarProduto(evento) {
+
+    // EVITA RECARREGAR A PÁGINA
+    evento.preventDefault();
+/*
+    // CAPTURA DADOS
+    const id = document.getElementById("id").value;
+    const nome = document.getElementById("nome").value;
+    const preco = document.getElementById("preco").value;
+    const imagem = document.getElementById("imagem").value;
+    // MONTA OBJETO
+    const produto = {
+        id: id,
+        nome: nome,
+        preco: preco,
+        imagem: imagem
+    };
+*/
+const form = document.getElementById("formProduto"); // CAPTURA O FORMULÁRIO
+const dadosForm = new FormData(form); // CAPTURA TODOS OS CAMPOS
+const produto = Object.fromEntries( dadosForm.entries()  ); // CONVERTE PARA OBJETO
+console.log(produto); // EXIBE OBJETO
+
+    try {
+        // ENVIA PARA API PHP
+        const resposta = await fetch("produtos_cadastrar.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(produto)
+        });
+
+		debugger;
+	
+        // CONVERTE RESPOSTA
+        const dados = await resposta.json();
+
+        // EXIBE RETORNO
+        alert(dados.mensagem);
+
+    } catch(erro) {
+
+        console.error(erro);
+
+        alert("Erro ao cadastrar produto");
+    }
+}
+
+        </script>
+    </body>
+</html>
